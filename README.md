@@ -1,12 +1,12 @@
 # SecureGuard AI - Your Personal Network Security Co-Pilot
 
-## 🚀 Quick Start (Demo Mode)
+##  QUICK START
 
-### 1. Install Dependencies
-bash
-pip install -r requirements.txt
+.venv/bin/python demo.py
 
----
+bash run_demo.sh
+
+
 ## Project Mission:
 
 Turn cybersecurity from a, expert field gated by knowledge into a AI guided tool accessible to everyone prioritizing user autonomy and giving security back into the hands of the user 
@@ -95,50 +95,10 @@ We developed this project in response to growing user concerns about data securi
 
 ---
 
-##  Implementation Roadmap
+## Roadmap
 
-### Phase 1: Local Agent Development (Days 1-2)
+### AWS Backend 
 
-#### Tech Stack:
-- **Language:** Python 3.11+ or Go 1.21+
-- **Libraries:**
-  - `scapy` (packet capture)
-  - `pyshark` (packet parsing)
-  - `scikit-learn` (local ML)
-  - `boto3` (AWS SDK)
-
-#### Tasks:
-1. **Network Capture Module**
-   ```python
-   # Capture packets using pcap
-   # Filter:  TCP, UDP, DNS, HTTP/HTTPS
-   # Privacy:  Hash IPs, redact payloads
-   ```
-
-2. **Local Anomaly Detection**
-   ```python
-   # Baseline normal traffic patterns
-   # Detect:  Port scans, DDoS, unusual protocols
-   # Use: Isolation Forest or One-Class SVM
-   ```
-
-3. **Secure Communication**
-   ```python
-   # Encrypt telemetry with AWS KMS
-   # Authenticate with Cognito tokens
-   # Rate limit uploads
-   ```
-
-#### Deliverable: 
-- Desktop app (Electron wrapper for cross-platform)
-- System tray icon with real-time status
-- Settings panel for capture filters
-
----
-
-### Phase 2: AWS Backend (Days 2-3)
-
-#### Infrastructure as Code (IaC):
 Use **AWS CDK** (Python or TypeScript)
 
 ```typescript
@@ -343,6 +303,13 @@ def generate_remediation_script(threat_type, os_type):
 
 ###  Web Dashboard 
 
+#### Tech Stack:
+- **Frontend:** React 18 + TypeScript
+- **UI Library:** AWS Amplify UI Components
+- **Charts:** Recharts or D3.js
+- **State:** React Query + Zustand
+- **Hosting:** AWS Amplify Hosting
+
 #### Key Features: 
 
 1. **Real-Time Dashboard**
@@ -362,13 +329,11 @@ def generate_remediation_script(threat_type, os_type):
    // Remediation options
    ```
 
-3. **Conversational Interface**
+3. **User infomation Chat Interface**
    ```tsx
    // Chat widget 
-   // Ask questions like: 
-   // - "What's happening on port 22?"
-   // - "Is this IP safe:  192.168.1.100?"
-   // - "How do I block this attack?"
+   // auto generates questions for the user
+   // What  
    ```
 
 #### Deployment:
@@ -395,10 +360,9 @@ amplify publish
 
 1. **Local Processing:**
    - All raw packet data stays on user's machine
-   - Only anonymized data sent to cloud: 
+   - Only encrypted data sent to cloud: 
      - Traffic volume statistics
      - Protocol distributions
-     - Anomaly scores (no payload data)
 
 2. **Data Encryption:**
    - In-transit: TLS 1.3 for all API calls
@@ -442,36 +406,7 @@ def sanitize_telemetry(raw_packet):
 | **S3** | Standard | Intelligent-Tiering | CloudFront CDN for threat signatures |
 | **API Gateway** | Regional | Edge-optimized | Multi-region active-active |
 | **Bedrock** | On-demand | Reserved capacity | Multi-region failover |
-
 ---
-
-
-##Testing Strategy
-
-### Unit Tests: 
-```python
-# test_threat_detector.py
-def test_port_scan_detection():
-    packets = generate_port_scan_traffic()
-    result = detect_anomaly(packets)
-    assert result['threat_type'] == 'port_scan'
-    assert result['confidence'] > 0.8
-```
-
-### Integration Tests:
-```python
-# test_aws_integration.py
-def test_bedrock_remediation():
-    response = generate_remediation_script('port_scan', 'linux')
-    assert 'iptables' in response
-    assert '#!/bin/bash' in response
-```
-
-### Load Testing:
-```bash
-# Use Artillery or Locust
-artillery quick --count 100 --num 10 https://api.secureguard.io/analyze
-```
 
 ---
 
@@ -482,9 +417,9 @@ artillery quick --count 100 --num 10 https://api.secureguard.io/analyze
 - [ ] ML model (trained + deployed)
 - [ ] Web dashboard (deployed on Amplify)
 - [ ] API documentation (Swagger/OpenAPI)
-- [x] GitHub repository with README
+- [ ] GitHub repository with README
 - [ ] Demo video (2-3 minutes)
-- [x] Presentation slides
+- [ ] Presentation slides
 - [ ] Architecture diagram (draw.io or Lucidchart)
 
 ---
