@@ -96,10 +96,50 @@ class CloudUploader:
         try:
             # Check if API endpoint is configured
             if not self.api_endpoint:
-                logger.warning("API endpoint not configured, skipping upload")
-                logger.debug(f"Would upload {len(self.batch)} telemetry items")
+                # FREE TIER / DEMO MODE: Write to local JSON file to update Dashboard
+                # This file acts as our "Cloud Database" for the demo
+                db_path = os.path.join(os.path.dirname(__file__), '..', 'dashboard_data.json')
+                
+                # Create default structure if not exists
+                if not os.path.exists(db_path):
+                    with open(db_path, 'w') as f:
+                        json.dump({'threats': [], 'stats': {'packets': 0}}, f)
+
+                # Prepare payload (Simulating what we WOULD send to AWS Lambda)
+                payload = {
+                    'timestamp': datetime.now().isoformat(),
+                    'telemetry_count': len(self.batch),
+                    'telemetry': self.batch[:self.batch_size]
+                }
+                
+                # Read current DB
+                try:
+                    with open(db_path, 'r') as f:
+                        db = json.load(f)
+                except:
+                    db = {'threats': [], 'stats': {'packets': 0}}
+                
+                # Update Stats "In the Cloud"
+                db['stats']['packets'] = db.get('stats', {}).get('packets', 0) + len(self.batch)
+                
+                # Save just the threats to the "Cloud DB"
+                for item in self.batch:
+                    if item.get('is_threat') or item.get('anomaly_score', 0) > 0.5:
+                         # Cap list size to 20 for simple display
+                        db['threats'].insert(0, item)
+                        db['threats'] = db['threats'][:20]
+
+                # Write back
+                with open(db_path, 'w') as f:
+                    json.dump(db, f, indent=2)
+
+                logger.info(f"[AWS SIMULATION] Uploaded {len(self.batch)} items to Simulated Cloud DB (dashboard_data.json)")
                 self.batch.clear()
                 return
+
+            # Real upload logic (if configured later)
+            # ...
+
             
             # Prepare payload
             payload = {
@@ -108,17 +148,30 @@ class CloudUploader:
                 'telemetry': self.batch[:self.batch_size]  # Respect batch size limit
             }
             
-            # In production, this would POST to API Gateway
-            # For now, just log (since we haven't deployed AWS yet)
-            logger.info(f"Uploading {len(self.batch)} telemetry items to cloud")
-            logger.debug(f"Payload size: {len(json.dumps(payload))} bytes")
+            # Send to API Gateway or Lambda Function URL
+            import requests
             
-            # Simulate API call
-            # response = requests.post(self.api_endpoint, json=payload)
-            
-            # Clear batch after successful upload
-            self.batch.clear()
-            logger.info("Upload successful")
+            # If using Lambda Function URL, use it directly. If using API Gateway, append endpoint.
+            url = self.api_endpoint
+            if url and 'lambda-url' not in url and not url.endswith('/analyze'):
+                 url = f"{url}/analyze"
+
+            if url:
+                response = requests.post(
+                    url,
+                    json=payload,
+                    timeout=30,
+                    headers={'Content-Type': 'application/json'}
+                )
+                
+                if response.status_code == 200:
+                    logger.info(f"Successfully uploaded {len(self.batch)} telemetry items")
+                    self.batch.clear()
+                else:
+                    logger.error(f"Upload failed: {response.status_code} - {response.text}")
+            else:
+                logger.info(f"[SIMULATION] Would upload {len(self.batch)} items (No URL configured)")
+                self.batch.clear()
             
         except ClientError as e:
             logger.error(f"AWS API error: {e}")
@@ -128,14 +181,53 @@ class CloudUploader:
     def upload_threat_event(self, threat_data):
         """Upload a detected threat event immediately (high priority)"""
         try:
+            # Prepare payload
+            payload = threat_data
+            timestamp = datetime.now().isoformat()
+            
             if not self.api_endpoint:
-                logger.warning(f"THREAT DETECTED (not uploaded - no API endpoint): {threat_data['type']}")
+                # FREE TIER: Save to local "Cloud DB"
+                logger.warning(f"[AWS SIMULATION] THREAT DETECTED: {threat_data['type']} - Uploading to Cloud DB...")
+                
+                db_path = os.path.join(os.path.dirname(__file__), '..', 'dashboard_data.json')
+                
+                # Load DB
+                try:
+                    with open(db_path, 'r') as f:
+                        db = json.load(f)
+                except:
+                    db = {'threats': [], 'stats': {'packets': 0}}
+                
+                # Add threat
+                threat_data['timestamp'] = timestamp
+                db['threats'].insert(0, threat_data) # Add to top
+                db['threats'] = db['threats'][:30]   # Keep last 30
+                
+                # Save DB
+                with open(db_path, 'w') as f:
+                    json.dump(db, f, indent=2)
+                    
                 return
             
             logger.warning(f"Uploading threat event: {threat_data['type']}")
             
-            # In production: POST to /threats endpoint
-            # response = requests.post(f"{self.api_endpoint}/threats", json=threat_data)
+            # Prepare threat payload properly wrapped
+            payload = {
+                'timestamp': datetime.now().isoformat(),
+                'is_threat': True,
+                'telemetry': [threat_data]
+            }
+
+            url = self.api_endpoint
+            if 'lambda-url' not in url and not url.endswith('/threats'):
+                 url = f"{url}/threats" # Or just use the main endpoint if it's a Function URL
+            
+            # For Function URL simple backend, we use the same endpoint for everything
+            if 'lambda-url' in self.api_endpoint:
+                url = self.api_endpoint
+
+            import requests
+            requests.post(url, json=payload, timeout=10)
             
             logger.info("Threat event uploaded")
             

@@ -2,9 +2,24 @@
 
 ##  QUICK START
 
-.venv/bin/python demo.py
+### 1. Run Local Demo
+```bash
+python3 demo.py
+```
 
-bash run_demo.sh
+### 2. Deploy AWS Cloud (Simple Prototype)
+If you have an AWS account (even a workshop one), you can deploy the backend in 1 minute:
+
+```bash
+# 1. Configure AWS Credentials
+aws configure
+
+# 2. Deploy Cloud Resources
+python3 simple_aws/deploy.py
+
+# 3. Run Demo again (it will auto-detect the cloud)
+python3 demo.py
+```
 
 
 ## Project Mission:

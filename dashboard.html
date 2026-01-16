@@ -247,50 +247,64 @@
         let totalPackets = 0;
         let threats = 0;
         
-        function updateStats() {
-            // Update Packets
-            const newPackets = Math.floor(Math.random() * 50) + 10;
-            totalPackets += newPackets;
-            document.getElementById('packet-count').innerText = totalPackets.toLocaleString();
+        async function updateStats() {
+            try {
+                // Fetch real data from our "Cloud DB" file
+                const response = await fetch('dashboard_data.json');
+                const data = await response.json();
+                
+                // Update total packets
+                const packetCount = data.stats.packets;
+                document.getElementById('packet-count').innerText = packetCount.toLocaleString();
 
-            // Update Bandwidth
-            document.getElementById('bandwidth').innerText = (Math.random() * 15 + 2).toFixed(1) + " Mbps";
+                // Update Threat Count
+                const threatCount = data.threats.length;
+                document.getElementById('threat-count').innerText = threatCount;
+                
+                // Update Health Score based on threats
+                const health = Math.max(0, 100 - (threatCount * 10));
+                const healthEl = document.getElementById('health-score');
+                healthEl.innerText = health + "%";
+                if(health < 70) healthEl.style.color = "#ef4444";
+                else healthEl.style.color = "#10b981";
 
-            // Update Chart
-            trafficChart.data.datasets[0].data.shift();
-            trafficChart.data.datasets[0].data.push(Math.floor(Math.random() * 60) + 20);
-            
-            trafficChart.data.datasets[1].data.shift();
-            trafficChart.data.datasets[1].data.push(Math.floor(Math.random() * 40) + 10);
-            
-            trafficChart.update();
+                // Update Log Feed with REAL threats from Python
+                const logFeed = document.getElementById('log-feed');
+                logFeed.innerHTML = ''; // Clear current feed
+                
+                data.threats.forEach(threat => {
+                    const entry = document.createElement('div');
+                    entry.className = 'log-entry critical';
+                    
+                    const time = new Date(threat.timestamp).toLocaleTimeString();
+                    const type = threat.type ? threat.type.toUpperCase() : "ANOMALY";
+                    const severity = threat.severity || "HIGH";
+                    
+                    entry.innerHTML = `
+                        <span style="color:#ef4444"><b>${type}</b></span> 
+                        <span style="color:#94a3b8; font-size:0.8em">${time}</span>
+                        <div style="font-size:0.85em; color:#cbd5e1; margin-top:2px;">
+                           Source: ${threat.src_ip_hash} → Dest: ${threat.dst_ip_hash}
+                        </div>
+                    `;
+                    logFeed.appendChild(entry);
+                });
+
+                // Bandwidth (randomized for liveliness)
+                document.getElementById('bandwidth').innerText = (Math.random() * 15 + 2).toFixed(1) + " Mbps";
+
+                // Update Chart
+                if(trafficChart) {
+                    trafficChart.data.datasets[0].data.shift();
+                    trafficChart.data.datasets[0].data.push(Math.floor(Math.random() * 60) + 20); // Simulated live load
+                    trafficChart.update();
+                }
+
+            } catch (e) {
+                console.log("Waiting for agent data...");
+            }
         }
-
-        function simulateThreat() {
-            // 5% chance to spawn a threat
-            if (Math.random() > 0.05) return;
-
-            threats++;
-            document.getElementById('threat-count').innerText = threats;
-            
-            // Update Health Score
-            const health = Math.max(0, 100 - (threats * 5));
-            const healthEl = document.getElementById('health-score');
-            healthEl.innerText = health + "%";
-            if(health < 70) healthEl.style.color = "#ef4444";
-
-            // Add Log Entry
-            const types = ['PORT SCAN', 'DDOS ATTEMPT', 'MALFORMED PACKET', 'SUSPICIOUS OUTBOUND'];
-            const type = types[Math.floor(Math.random() * types.length)];
-            const time = new Date().toLocaleTimeString();
-            
-            const logFeed = document.getElementById('log-feed');
-            const entry = document.createElement('div');
-            entry.className = 'log-entry critical';
-            entry.innerHTML = `<span style="color:#ef4444"><b>${type}</b></span> <span style="color:#94a3b8">${time}</span>`;
-            logFeed.prepend(entry);
-        }
-
+        
         // --- 3. CHAT LOGIC ---
         function handleChat() {
             const input = document.getElementById('user-input');
@@ -318,8 +332,8 @@
         }
 
         // Run Loop
-        setInterval(updateStats, 1000);
-        setInterval(simulateThreat, 1000);
+        setInterval(updateStats, 2000); // Check "Cloud" every 2 seconds
+        // setInterval(simulateThreat, 1000); // Disabled simulation, using real data now!
 
     </script>
 </body>

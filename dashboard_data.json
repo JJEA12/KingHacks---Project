@@ -1,0 +1,82 @@
+{
+  "threats": [
+    {
+      "type": "unusual_port",
+      "timestamp": "2026-01-16T19:13:10.361553",
+      "packet": {
+        "timestamp": "2026-01-16T19:13:10.361084",
+        "protocol": "TCP",
+        "src_ip_hash": "suspicious_004",
+        "dst_ip_hash": "internal_004",
+        "src_port": 47521,
+        "dst_port": 1234,
+        "packet_size": 558,
+        "flags": "SA"
+      },
+      "severity": "HIGH"
+    },
+    {
+      "type": "unusual_port",
+      "timestamp": "2026-01-16T19:13:09.060633",
+      "packet": {
+        "timestamp": "2026-01-16T19:13:09.060212",
+        "protocol": "TCP",
+        "src_ip_hash": "suspicious_005",
+        "dst_ip_hash": "internal_005",
+        "src_port": 33357,
+        "dst_port": 31337,
+        "packet_size": 1189,
+        "flags": "SA"
+      },
+      "severity": "HIGH"
+    },
+    {
+      "type": "unusual_port",
+      "timestamp": "2026-01-16T19:13:08.235449",
+      "packet": {
+        "timestamp": "2026-01-16T19:13:08.235015",
+        "protocol": "TCP",
+        "src_ip_hash": "suspicious_002",
+        "dst_ip_hash": "internal_005",
+        "src_port": 64046,
+        "dst_port": 6666,
+        "packet_size": 494,
+        "flags": "SA"
+      },
+      "severity": "HIGH"
+    },
+    {
+      "type": "unusual_port",
+      "timestamp": "2026-01-16T19:13:07.259977",
+      "packet": {
+        "timestamp": "2026-01-16T19:13:07.259550",
+        "protocol": "TCP",
+        "src_ip_hash": "suspicious_007",
+        "dst_ip_hash": "internal_001",
+        "src_port": 56891,
+        "dst_port": 1234,
+        "packet_size": 1403,
+        "flags": "SA"
+      },
+      "severity": "HIGH"
+    },
+    {
+      "type": "unusual_port",
+      "timestamp": "2026-01-16T19:13:06.648422",
+      "packet": {
+        "timestamp": "2026-01-16T19:13:06.647993",
+        "protocol": "TCP",
+        "src_ip_hash": "suspicious_002",
+        "dst_ip_hash": "internal_005",
+        "src_port": 25350,
+        "dst_port": 31337,
+        "packet_size": 105,
+        "flags": "SA"
+      },
+      "severity": "HIGH"
+    }
+  ],
+  "stats": {
+    "packets": 93
+  }
+}
