@@ -90,7 +90,7 @@ We came up with this project in response to growing user concerns about data sec
 
 ---
 
-## 📋 Implementation Roadmap
+##  Implementation Roadmap
 
 ### Phase 1: Local Agent Development (Days 1-2)
 
