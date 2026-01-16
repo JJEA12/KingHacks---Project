@@ -3,7 +3,7 @@
 ## 🚀 Quick Start (Demo Mode)
 
 ### 1. Install Dependencies
-```bash
+bash
 pip install -r requirements.txt
 
 ---
