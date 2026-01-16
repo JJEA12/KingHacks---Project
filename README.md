@@ -52,7 +52,7 @@ We developed this project in response to growing user concerns about data securi
 
 ---
 
-## 🛠️ Exact AWS Services & Their Roles
+##  Exact AWS Services & Their Roles
 
 ### Core AI/ML Services:
 
@@ -508,12 +508,12 @@ artillery quick --count 100 --num 10 https://api.secureguard.io/analyze
 
 ---
 
-## 🚀 Quick Start Commands
+##  Quick Start Commands
 
 ```bash
 # Clone repository
-git clone https://github.com/crazysudz/secureguard-ai
-cd secureguard-ai
+git clone https://github.com/JJEA12/KingHacks---Project
+cd KingHacks---Project
 
 # Backend deployment
 cd infrastructure
@@ -538,7 +538,7 @@ python deploy.py --endpoint threat-classifier
 ```
 
 
-## 📚 Resources & References
+##  Resources & References
 
 ### AWS Documentation:
 - [Amazon Bedrock Developer Guide](https://docs.aws.amazon.com/bedrock/)
