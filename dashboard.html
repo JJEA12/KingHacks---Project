@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureGuard AI - Command Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-green);
+        }
+
+        .status-badge {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid var(--accent-green);
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto auto;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card {
+            grid-column: span 1;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Chart Section */
+        .chart-card {
+            grid-column: span 3;
+            grid-row: span 2;
+            min-height: 400px;
+        }
+
+        /* Threat Log Section */
+        .log-card {
+            grid-column: span 1;
+            grid-row: span 2;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-container {
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-top: 10px;
+        }
+
+        .log-entry {
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .log-entry.critical { border-left: 3px solid var(--accent-red); }
+        .log-entry.warning { border-left: 3px solid var(--accent-blue); }
+
+        /* Chat Section */
+        .chat-card {
+            grid-column: span 4;
+            min-height: 250px;
+        }
+
+        .chat-messages {
+            height: 150px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex-grow: 1;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        button {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🛡️ SecureGuard AI</div>
+        <div class="status-badge">● SYSTEM ACTIVE</div>
+    </header>
+
+    <div class="grid-container">
+        <div class="card stat-card">
+            <div class="stat-label">Network Health</div>
+            <div class="stat-value" id="health-score" style="color: var(--accent-green)">98%</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Packets Analyzed</div>
+            <div class="stat-value" id="packet-count">0</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Active Threats</div>
+            <div class="stat-value" id="threat-count" style="color: var(--accent-red)">0</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Bandwidth</div>
+            <div class="stat-value" id="bandwidth">0 Mbps</div>
+        </div>
+
+        <div class="card chart-card">
+            <h3 style="margin-top: 0;">Real-Time Traffic Analysis</h3>
+            <canvas id="trafficChart"></canvas>
+        </div>
+
+        <div class="card log-card">
+            <h3 style="margin-top: 0;">Live Threat Feed</h3>
+            <div class="log-container" id="log-feed">
+                </div>
+        </div>
+
+        <div class="card chat-card">
+            <h3 style="margin-top: 0;">Ask SecureGuard AI (Bedrock)</h3>
+            <div class="chat-messages" id="chat-box">
+                <div style="color: var(--accent-green); margin-bottom: 5px;">[AI]: System initialized. I am monitoring your network for anomalies.</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Example: Why is the health score dropping?">
+                <button onclick="handleChat()">Analyze</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. SETUP CHART ---
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        const trafficChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(20).fill(''),
+                datasets: [{
+                    label: 'TCP Traffic',
+                    borderColor: '#3b82f6',
+                    data: Array(20).fill(0),
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                }, {
+                    label: 'UDP Traffic',
+                    borderColor: '#10b981',
+                    data: Array(20).fill(0),
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#334155' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // --- 2. SIMULATION LOGIC ---
+        let totalPackets = 0;
+        let threats = 0;
+        
+        function updateStats() {
+            // Update Packets
+            const newPackets = Math.floor(Math.random() * 50) + 10;
+            totalPackets += newPackets;
+            document.getElementById('packet-count').innerText = totalPackets.toLocaleString();
+
+            // Update Bandwidth
+            document.getElementById('bandwidth').innerText = (Math.random() * 15 + 2).toFixed(1) + " Mbps";
+
+            // Update Chart
+            trafficChart.data.datasets[0].data.shift();
+            trafficChart.data.datasets[0].data.push(Math.floor(Math.random() * 60) + 20);
+            
+            trafficChart.data.datasets[1].data.shift();
+            trafficChart.data.datasets[1].data.push(Math.floor(Math.random() * 40) + 10);
+            
+            trafficChart.update();
+        }
+
+        function simulateThreat() {
+            // 5% chance to spawn a threat
+            if (Math.random() > 0.05) return;
+
+            threats++;
+            document.getElementById('threat-count').innerText = threats;
+            
+            // Update Health Score
+            const health = Math.max(0, 100 - (threats * 5));
+            const healthEl = document.getElementById('health-score');
+            healthEl.innerText = health + "%";
+            if(health < 70) healthEl.style.color = "#ef4444";
+
+            // Add Log Entry
+            const types = ['PORT SCAN', 'DDOS ATTEMPT', 'MALFORMED PACKET', 'SUSPICIOUS OUTBOUND'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const time = new Date().toLocaleTimeString();
+            
+            const logFeed = document.getElementById('log-feed');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry critical';
+            entry.innerHTML = `<span style="color:#ef4444"><b>${type}</b></span> <span style="color:#94a3b8">${time}</span>`;
+            logFeed.prepend(entry);
+        }
+
+        // --- 3. CHAT LOGIC ---
+        function handleChat() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const text = input.value;
+            
+            if (!text) return;
+
+            // User Message
+            chatBox.innerHTML += `<div style="margin-bottom: 5px;"><b>You:</b> ${text}</div>`;
+            input.value = '';
+
+            // Simulated AI Response
+            setTimeout(() => {
+                let reply = "Analyzing network context... No immediate anomalies related to that query.";
+                if (text.toLowerCase().includes("health") || text.toLowerCase().includes("dropping")) {
+                    reply = "The Health Score dropped due to a <b>PORT SCAN</b> detected on port 443 originating from IP 192.168.x.x. I have updated the firewall rules.";
+                } else if (text.toLowerCase().includes("block")) {
+                    reply = "I have generated an <b>iptables script</b> to block the suspicious IP range. Would you like me to execute it?";
+                }
+                
+                chatBox.innerHTML += `<div style="color: var(--accent-green); margin-bottom: 5px;"><b>[SecureGuard AI]:</b> ${reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 800);
+        }
+
+        // Run Loop
+        setInterval(updateStats, 1000);
+        setInterval(simulateThreat, 1000);
+
+    </script>
+</body>
+</html>
