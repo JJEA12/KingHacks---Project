@@ -2,9 +2,8 @@
 
 ##  QUICK START
 
-.venv/bin/python demo.py
-
-bash run_demo.sh
+```bash
+pip install -r requirements.txt
 
 
 ## Project Mission:
