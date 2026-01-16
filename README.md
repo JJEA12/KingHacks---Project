@@ -1,11 +1,12 @@
 # SecureGuard AI - Your Personal Network Security Co-Pilot
 
-##  QUICK START
+## 🚀 Quick Start (Demo Mode)
 
+### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 
-
+---
 ## Project Mission:
 
 Turn cybersecurity from a, expert field gated by knowledge into a AI guided tool accessible to everyone prioritizing user autonomy and giving security back into the hands of the user 
