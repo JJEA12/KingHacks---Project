@@ -38,7 +38,7 @@ def load_config():
 
 def main():
     """Main application entry point"""
-    logger.info("🛡️  Starting SecureGuard AI Agent...")
+    logger.info("Starting SecureGuard AI Agent...")
     
     try:
         # Load configuration

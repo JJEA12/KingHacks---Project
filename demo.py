@@ -109,7 +109,7 @@ stats = {
 }
 
 try:
-    logger.info("🚀 Starting network simulation...")
+    logger.info(" Starting network simulation")
     logger.info("Press Ctrl+C to stop and view statistics\n")
     
     while True:
@@ -129,7 +129,7 @@ try:
         if threats:
             stats['threats_detected'] += 1
             for threat in threats:
-                logger.warning(f"🚨 THREAT DETECTED: {threat['type'].upper()} (Severity: {threat['severity']})")
+                logger.warning(f" THREAT DETECTED: {threat['type'].upper()} (Severity: {threat['severity']})")
                 cloud_uploader.upload_threat_event(threat)
         elif stats['total_packets'] % 100 == 0:
             # Show progress every 100 packets
@@ -139,7 +139,7 @@ try:
         time.sleep(random.uniform(0.02, 0.1))
         
 except KeyboardInterrupt:
-    print("\n\n🛑 Stopping simulation...")
+    print("\n\n Stopping simulation...")
     
     # Stop services
     anomaly_detector.stop()
@@ -150,32 +150,32 @@ except KeyboardInterrupt:
     
     # Display final statistics
     print("\n" + "="*70)
-    print("📊 FINAL STATISTICS")
+    print(" FINAL STATISTICS")
     print("="*70)
     
-    print(f"\n⏱️  Runtime: {runtime:.1f} seconds")
-    print(f"📦 Total Packets Processed: {stats['total_packets']}")
-    print(f"🚨 Threats Detected: {stats['threats_detected']}")
-    print(f"📈 Packets/Second: {stats['total_packets']/runtime:.1f}")
+    print(f"\n  Runtime: {runtime:.1f} seconds")
+    print(f" Total Packets Processed: {stats['total_packets']}")
+    print(f" Threats Detected: {stats['threats_detected']}")
+    print(f" Packets/Second: {stats['total_packets']/runtime:.1f}")
     
     # Component statistics
     detector_stats = anomaly_detector.get_stats()
     uploader_stats = cloud_uploader.get_stats()
     
-    print(f"\n🔍 Anomaly Detector:")
+    print(f"\n Anomaly Detector:")
     print(f"   - Packets analyzed: {detector_stats['packets_analyzed']}")
     print(f"   - Active connections tracked: {detector_stats['active_connections']}")
     print(f"   - Total alerts: {detector_stats['alerts_count']}")
     
-    print(f"\n☁️  Cloud Uploader:")
+    print(f"\n  Cloud Uploader:")
     print(f"   - Queue size: {uploader_stats['queue_size']}")
     print(f"   - Pending batch: {uploader_stats['batch_size']}")
     print(f"   - API configured: {uploader_stats['endpoint_configured']}")
     
     print("\n" + "="*70)
-    print("✅ Demo completed successfully!")
+    print(" Demo completed successfully!")
     print("="*70)
-    print("\n💡 Next Steps:")
+    print("\n Next Steps:")
     print("   1. Configure AWS credentials in .env to enable cloud features")
     print("   2. Deploy AWS infrastructure: cd infrastructure && npm install && cdk deploy")
     print("   3. Run with real packet capture: sudo python3 agent/main.py --cli")

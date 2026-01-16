@@ -63,7 +63,7 @@ class NetworkCapture:
                 filter=self.config.get('capture_filter', 'tcp or udp')
             )
         except PermissionError:
-            logger.error("⚠️  Permission denied! Run with sudo/admin privileges to capture packets.")
+            logger.error("Permission denied! Run with sudo/admin privileges to capture packets.")
         except Exception as e:
             logger.error(f"Capture error: {e}")
             

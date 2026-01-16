@@ -53,9 +53,9 @@ class SecureGuardGUI:
     def _display_menu(self):
         """Display console menu and handle commands"""
         print("\n" + "="*60)
-        print("🛡️  SECUREGUARD AI - Network Security Agent")
+        print("SECUREGUARD AI - Network Security Agent")
         print("="*60)
-        print("\nAgent Status: RUNNING ✅")
+        print("\nAgent Status: RUNNING")
         print("\nCommands:")
         print("  stats  - Show statistics")
         print("  alerts - Show recent alerts")
@@ -75,14 +75,14 @@ class SecureGuardGUI:
                 elif command == 'help':
                     self._display_menu()
                 elif command == 'quit':
-                    print("\n🛑 Shutting down SecureGuard AI...")
+                    print("\nShutting down SecureGuard AI...")
                     self._shutdown()
                     break
                 else:
                     print(f"Unknown command: {command}. Type 'help' for commands.")
                     
         except KeyboardInterrupt:
-            print("\n\n🛑 Interrupted. Shutting down...")
+            print("\n\nInterrupted. Shutting down...")
             self._shutdown()
             
     def _show_stats(self):
@@ -92,20 +92,20 @@ class SecureGuardGUI:
         uploader_stats = self.cloud_uploader.get_stats()
         
         print("\n" + "="*60)
-        print("📊 STATISTICS")
+        print("STATISTICS")
         print("="*60)
-        print(f"\n📡 Network Capture:")
+        print(f"\nNetwork Capture:")
         print(f"  Total packets: {capture_stats['total_packets']}")
         print(f"  TCP: {capture_stats['tcp_packets']}")
         print(f"  UDP: {capture_stats['udp_packets']}")
         print(f"  ICMP: {capture_stats['icmp_packets']}")
         
-        print(f"\n🔍 Anomaly Detection:")
+        print(f"\nAnomaly Detection:")
         print(f"  Packets analyzed: {detector_stats['packets_analyzed']}")
         print(f"  Active connections: {detector_stats['active_connections']}")
         print(f"  Alerts generated: {detector_stats['alerts_count']}")
         
-        print(f"\n☁️  Cloud Upload:")
+        print(f"\nCloud Upload:")
         print(f"  Queue size: {uploader_stats['queue_size']}")
         print(f"  Batch size: {uploader_stats['batch_size']}")
         print(f"  Endpoint configured: {uploader_stats['endpoint_configured']}")
@@ -116,11 +116,11 @@ class SecureGuardGUI:
         alerts = self.anomaly_detector.get_alerts()
         
         print("\n" + "="*60)
-        print("🚨 RECENT ALERTS")
+        print("RECENT ALERTS")
         print("="*60)
         
         if not alerts:
-            print("\nNo alerts detected yet. Your network appears secure! ✅")
+            print("\nNo alerts detected yet. Your network appears secure!")
         else:
             for i, alert in enumerate(alerts[-10:], 1):  # Show last 10
                 print(f"\n{i}. {alert['type'].upper()} - {alert['severity']}")
@@ -135,5 +135,5 @@ class SecureGuardGUI:
         self.anomaly_detector.stop()
         self.cloud_uploader.stop()
         logger.info("SecureGuard AI stopped")
-        print("✅ Shutdown complete.\n")
+        print("Shutdown complete.\n")
         sys.exit(0)

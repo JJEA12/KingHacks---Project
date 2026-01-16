@@ -1,6 +1,6 @@
 """
 Cloud Uploader Module
-Securely uploads anonymized telemetry to AWS.
+uploads anonymized data to AWS.
 """
 
 import os
@@ -110,7 +110,7 @@ class CloudUploader:
             
             # In production, this would POST to API Gateway
             # For now, just log (since we haven't deployed AWS yet)
-            logger.info(f"📤 Uploading {len(self.batch)} telemetry items to cloud")
+            logger.info(f"Uploading {len(self.batch)} telemetry items to cloud")
             logger.debug(f"Payload size: {len(json.dumps(payload))} bytes")
             
             # Simulate API call
@@ -118,7 +118,7 @@ class CloudUploader:
             
             # Clear batch after successful upload
             self.batch.clear()
-            logger.info("✅ Upload successful")
+            logger.info("Upload successful")
             
         except ClientError as e:
             logger.error(f"AWS API error: {e}")
@@ -129,15 +129,15 @@ class CloudUploader:
         """Upload a detected threat event immediately (high priority)"""
         try:
             if not self.api_endpoint:
-                logger.warning(f"🚨 THREAT DETECTED (not uploaded - no API endpoint): {threat_data['type']}")
+                logger.warning(f"THREAT DETECTED (not uploaded - no API endpoint): {threat_data['type']}")
                 return
             
-            logger.warning(f"🚨 Uploading threat event: {threat_data['type']}")
+            logger.warning(f"Uploading threat event: {threat_data['type']}")
             
             # In production: POST to /threats endpoint
             # response = requests.post(f"{self.api_endpoint}/threats", json=threat_data)
             
-            logger.info("✅ Threat event uploaded")
+            logger.info("Threat event uploaded")
             
         except Exception as e:
             logger.error(f"Failed to upload threat event: {e}")

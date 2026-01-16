@@ -90,7 +90,7 @@ class AnomalyDetector:
                     'severity': self._get_severity(threat_name)
                 }
                 threats.append(threat)
-                logger.warning(f"🚨 Threat detected: {threat_name}")
+                logger.warning(f"Threat detected: {threat_name}")
                 
         return threats if threats else None
         

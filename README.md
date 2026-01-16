@@ -31,10 +31,10 @@ We developed this project in response to growing user concerns about data securi
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 │         ↓                                     ↓            │
 │  ┌──────────────────────────────────────────────────┐      │
-│  │        Secure Agent (Python/ Desktop App)      │      │
+│  │        Secure Agent (Python/ Desktop App)        │      │
 │  └──────────────────────────────────────────────────┘      │
 └────────────────────────────────────────────────────────────┘
-                            ↓ (Encrypted, Anonymized Data)
+                            ↓ (Encrypted Data)
 ┌────────────────────────────────────────────────────────────┐
 │                    AWS CLOUD TIER                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
@@ -49,10 +49,9 @@ We developed this project in response to growing user concerns about data securi
 └────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────┐
-│                  PRESENTATION TIER                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
 │  │ Web Dashboard│  │  CLI Tool    │  │  Mobile App  │      │
-│  │ (React)      │  │  (Optional)  │  │  (Future)    │      │
+│  │ (React)      │  │  (Optional)  │  │  (Possible)  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └────────────────────────────────────────────────────────────┘
 ```
