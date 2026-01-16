@@ -2,29 +2,60 @@
 
 ##  QUICK START (New Machine Setup)
 
-### Run local demo
+### Step 1: Clone the Repository
+
+**All Platforms (Linux/Mac/Windows):**
 ```bash
-# Clone the repository
 git clone https://github.com/JJEA12/KingHacks---Project.git
 cd KingHacks---Project
+```
 
-# Install Python dependencies
+### Step 2: Install Python Dependencies
+
+**Linux/Mac:**
+```bash
+pip3 install -r agent/requirements.txt
+pip3 install streamlit pandas plotly
+```
+
+**Windows (Command Prompt or PowerShell):**
+```cmd
 pip install -r agent/requirements.txt
 pip install streamlit pandas plotly
 ```
 
-### Step 2: Run the Security Agent (Backend)
-This simulates network traffic and detects threats using local ML:
+> **Note:** Make sure you have Python 3.8+ installed. Check with `python3 --version` (Linux/Mac) or `python --version` (Windows)
+
+### Step 3: Run the Security Agent (Backend)
+
+This simulates network traffic and detects threats using local ML.
+
+**Linux/Mac:**
 ```bash
 python3 demo.py
 ```
+
+**Windows:**
+```cmd
+python demo.py
+```
+
 **What you'll see:** Terminal output showing simulated network packets and detected threats (Port Scans, DDoS attempts).
 
-###  Launch the Visual Dashboard (Frontend)
+### Step 4: Launch the Visual Dashboard (Frontend)
+
 Open a **new terminal** and run:
+
+**Linux/Mac:**
 ```bash
 streamlit run agent/dashboard.py
 ```
+
+**Windows:**
+```cmd
+streamlit run agent/dashboard.py
+```
+
 **What you'll see:** A web browser will open showing:
 -  Real-time threat timeline visualization
 -  Attack distribution charts
