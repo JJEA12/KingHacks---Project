@@ -343,13 +343,6 @@ def generate_remediation_script(threat_type, os_type):
 
 ###  Web Dashboard 
 
-#### Tech Stack:
-- **Frontend:** React 18 + TypeScript
-- **UI Library:** AWS Amplify UI Components
-- **Charts:** Recharts or D3.js
-- **State:** React Query + Zustand
-- **Hosting:** AWS Amplify Hosting
-
 #### Key Features: 
 
 1. **Real-Time Dashboard**
@@ -371,7 +364,7 @@ def generate_remediation_script(threat_type, os_type):
 
 3. **Conversational Interface**
    ```tsx
-   // Chat widget (bottom-right)
+   // Chat widget 
    // Ask questions like: 
    // - "What's happening on port 22?"
    // - "Is this IP safe:  192.168.1.100?"
@@ -402,7 +395,7 @@ amplify publish
 
 1. **Local Processing:**
    - All raw packet data stays on user's machine
-   - Only anonymized metadata sent to cloud: 
+   - Only anonymized data sent to cloud: 
      - Traffic volume statistics
      - Protocol distributions
      - Anomaly scores (no payload data)
@@ -450,24 +443,6 @@ def sanitize_telemetry(raw_packet):
 | **API Gateway** | Regional | Edge-optimized | Multi-region active-active |
 | **Bedrock** | On-demand | Reserved capacity | Multi-region failover |
 
-### Cost Optimization:
-
-```python
-# Estimated costs for POC (1-100 users):
-# - Lambda: $0-5/month (1M free tier)
-# - DynamoDB: $0-10/month (25GB free tier)
-# - S3: $0-5/month (5GB free tier)
-# - Bedrock: ~$10-50/month (based on usage)
-# - SageMaker: ~$50/month (ml.t2.medium endpoint)
-# Total: ~$70-120/month for POC
-
-# Cost controls:
-# 1. Use Lambda instead of EC2
-# 2. DynamoDB on-demand for variable traffic
-# 3. S3 lifecycle policies (archive old data)
-# 4. CloudWatch alarms on spending thresholds
-```
-
 ---
 
 
@@ -507,9 +482,9 @@ artillery quick --count 100 --num 10 https://api.secureguard.io/analyze
 - [ ] ML model (trained + deployed)
 - [ ] Web dashboard (deployed on Amplify)
 - [ ] API documentation (Swagger/OpenAPI)
-- [ ] GitHub repository with README
+- [x] GitHub repository with README
 - [ ] Demo video (2-3 minutes)
-- [ ] Presentation slides
+- [x] Presentation slides
 - [ ] Architecture diagram (draw.io or Lucidchart)
 
 ---
