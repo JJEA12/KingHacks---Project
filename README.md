@@ -7,8 +7,7 @@ Turn cybersecurity from a, expert field gated by knowledge into a AI guided tool
 ---
 ### Whets unique about this project?:
 
-We came up with this project in response to growing user concerns about data security and the lack of transparency in modern cloud services seen in issues like unprompted OneDrive syncing or loss of local file control. To address this, we built a privacy-first architecture where all sensitive traffic analysis occurs locally on the user's network; only anonymized threat patterns are ever processed in the cloud. The system functions as an autonomous cyber defense unit that uses machine learning to establish a baseline of network behavior, predicting and neutralizing anomalies before they become breaches. It replaces complex log management with a natural language interface, allowing users to simply ask questions about their security status. Furthermore, it provides one-click, AI-generated remediation scripts tailored to the specific environment, ensuring users maintain full ownership of their data while securing their infrastructure.
-
+We developed this project in response to growing user concerns about data security and the lack of transparency in modern cloud services seen in  issues like unprompted OneDrive syncing or loss of local file control. To address this, we built a privacy first project where all sensitive traffic analysis occurs locally on the user's network; only  threat patterns are ever processed in the cloud. The system functions as an  cyber defense tool that uses machine learning to analyze network behavior, predicting and stoping threats before they become problems for the user. 
 ---
 
 ##  System Architecture
@@ -25,7 +24,7 @@ We came up with this project in response to growing user concerns about data sec
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 │         ↓                                     ↓            │
 │  ┌──────────────────────────────────────────────────┐      │
-│  │        Secure Agent (Python/Go Desktop App)      │      │
+│  │        Secure Agent (Python/ Desktop App)      │      │
 │  └──────────────────────────────────────────────────┘      │
 └────────────────────────────────────────────────────────────┘
                             ↓ (Encrypted, Anonymized Data)
@@ -45,8 +44,8 @@ We came up with this project in response to growing user concerns about data sec
 ┌────────────────────────────────────────────────────────────┐
 │                  PRESENTATION TIER                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Web Dashboard│ │  CLI Tool    │  │  Mobile App  │      │
-│  │  (React)      │ │  (Optional)  │  │  (Future)    │      │
+│  │ Web Dashboard│  │  CLI Tool    │  │  Mobile App  │      │
+│  │ (React)      │  │  (Optional)  │  │  (Future)    │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └────────────────────────────────────────────────────────────┘
 ```
@@ -223,7 +222,7 @@ aws cloudformation describe-stacks \
 
 ---
 
-### Phase 3: ML Model Training (Day 3)
+###  ML Model Training 
 
 #### Dataset: 
 - **Public Dataset:** [CICIDS2017](https://www.unb.ca/cic/datasets/ids-2017.html) or [KDD Cup 99](http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html)
@@ -266,7 +265,7 @@ predictor = sklearn_estimator.deploy(
 
 ---
 
-### Phase 4: Bedrock AI Integration (Day 4)
+### : Bedrock AI Integration 
 
 #### Conversational Interface: 
 
@@ -336,7 +335,7 @@ def generate_remediation_script(threat_type, os_type):
 
 ---
 
-### Phase 5: Web Dashboard (Days 4-5)
+###  Web Dashboard 
 
 #### Tech Stack:
 - **Frontend:** React 18 + TypeScript
@@ -465,47 +464,6 @@ def sanitize_telemetry(raw_packet):
 
 ---
 
-##  Demo Script for Hackathon
-
-### 5-Minute Presentation Flow:
-
-**Minute 1: The Problem**
-> "65% of small businesses lack dedicated cybersecurity staff.  When an attack happens, they're lost.  SecureGuard AI changes that."
-
-**Minute 2: The Demo - Attack Detection**
-```
-1. Launch desktop app → Show normal traffic baseline
-2. Simulate port scan (nmap localhost)
-3. App detects anomaly in 2 seconds
-4. Dashboard shows alert with severity
-```
-
-**Minute 3: The AI Conversation**
-```
-User types: "What's happening?"
-AI responds: "I've detected a port scanning attack from 
-192.168.1.50.  This is likely reconnaissance for a larger 
-attack. Here's what you should do..."
-```
-
-**Minute 4: One-Click Remediation**
-```
-1. Click "Generate Fix"
-2. Bedrock creates firewall rule script
-3. Show script with explanations
-4. Execute → Threat blocked
-5. Re-scan shows clean status
-```
-
-**Minute 5: The Vision**
-```
-- Show architecture diagram
-- Explain scalability (local processing + cloud AI)
-- Privacy commitment (no data collection)
-- Future:  Community threat intelligence network
-```
-
----
 
 ##Testing Strategy
 
@@ -595,10 +553,4 @@ python deploy.py --endpoint threat-classifier
 - [Scapy](https://scapy.net/) - Packet manipulation
 - [Zeek](https://zeek.org/) - Network analysis framework
 
----
 
-
-
----
-
-**Good luck at KingHacks 2026!  You've got this!  🚀🔒**
