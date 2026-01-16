@@ -2,8 +2,48 @@
 
 ##  QUICK START (New Machine Setup)
 
-### Run local demo
+### Step 1: Install Python 3.12+
+
+**Linux (Debian/Ubuntu):**
 ```bash
+sudo apt update
+sudo apt install python3 python3-pip git
+```
+
+**Linux (Fedora/RHEL):**
+```bash
+sudo dnf install python3 python3-pip git
+```
+
+**macOS:**
+```bash
+# Install Homebrew if you don't have it
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install Python
+brew install python@3.12 git
+```
+
+**Windows:**
+1. Download Python from [python.org](https://www.python.org/downloads/)
+2.  Check "Add Python to PATH" during installation
+3. Install Git from [git-scm.com](https://git-scm.com/download/win)
+
+### Step 2: Clone & Install Dependencies
+
+**Linux/macOS:**
+```bash
+# Clone the repository
+git clone https://github.com/JJEA12/KingHacks---Project.git
+cd KingHacks---Project
+
+# Install Python dependencies
+pip3 install -r agent/requirements.txt
+pip3 install streamlit pandas plotly
+```
+
+**Windows (PowerShell/CMD):**
+```powershell
 # Clone the repository
 git clone https://github.com/JJEA12/KingHacks---Project.git
 cd KingHacks---Project
@@ -13,25 +53,45 @@ pip install -r agent/requirements.txt
 pip install streamlit pandas plotly
 ```
 
-### Step 2: Run the Security Agent (Backend)
+### Step 3: Run the Security Agent (Backend)
 This simulates network traffic and detects threats using local ML:
+
+**Linux/macOS:**
 ```bash
 python3 demo.py
 ```
+
+**Windows:**
+```powershell
+python demo.py
+```
+
 **What you'll see:** Terminal output showing simulated network packets and detected threats (Port Scans, DDoS attempts).
 
-###  Launch the Visual Dashboard (Frontend)
-Open a **new terminal** and run:
+### Step 4: Launch the Visual Dashboard (Frontend)
+Open a **new terminal/command prompt** and run:
+
+**Linux/macOS:**
 ```bash
 streamlit run agent/dashboard.py
 ```
-**What you'll see:** A web browser will open showing:
--  Real-time threat timeline visualization
--  Attack distribution charts
-- Live security metrics
-- Color-coded threat severity indicators
+
+**Windows:**
+```powershell
+streamlit run agent/dashboard.py
+```
+
+**What you'll see:** A web browser will open automatically showing:
+- 🛡️ Real-time threat timeline visualization
+- 📊 Attack distribution charts
+- 📈 Live security metrics
+- 🔴 Color-coded threat severity indicators
 
 The dashboard automatically reads threat data from the agent and updates every 2 seconds.
+
+> **💡 Tip:** On Windows, if the browser doesn't open automatically, manually visit `http://localhost:8501`
+
+> **💡 Tip:** On Windows, if the browser doesn't open automatically, manually visit `http://localhost:8501`
 
 ---
 
@@ -493,15 +553,28 @@ KingHacks---Project/
 - Check that `dashboard_data.json` exists in the project root
 
 **Q: Import errors when running demo.py**
-- Run: `pip install -r agent/requirements.txt`
-- Then: `pip install streamlit pandas plotly`
+- **Linux/macOS:** Run `pip3 install -r agent/requirements.txt`
+- **Windows:** Run `pip install -r agent/requirements.txt`
+- Then install additional packages: `pip install streamlit pandas plotly` (use `pip3` on Linux/macOS)
 
 **Q: Permission denied errors**
 - Use `demo.py` instead of `main.py` (demo doesn't need admin privileges)
+- **Linux:** You may need to use `python3` instead of `python`
+- **Windows:** Run PowerShell/CMD as Administrator if issues persist
 
 **Q: Dashboard won't open in browser**
 - Manually visit: `http://localhost:8501`
 - Or check the terminal for the correct port
+- **Windows Firewall:** You may need to allow Python through the firewall
+
+**Q: "python/python3 not found"**
+- **Linux/macOS:** Use `python3` explicitly
+- **Windows:** Make sure you checked "Add Python to PATH" during installation
+  - If not, reinstall Python or add it to PATH manually
+
+**Q: Module 'scapy' requires elevated privileges**
+- This only affects `main.py` (real packet capture)
+- Use `demo.py` instead for the simulation mode (no admin needed)
 
 ---
 
