@@ -102,7 +102,7 @@ while True:
         c1, c2 = st.columns([2, 1])
         
         with c1:
-            st.subheader("Recent Threat Activity")
+            st.subheader("Live Threat Timeline")
             if data['threats']:
                 df = pd.DataFrame(data['threats'])
                 if not df.empty:
@@ -114,25 +114,58 @@ while True:
                     required_cols = ['timestamp', 'type', 'src_ip_hash', 'severity']
                     for col in required_cols:
                         if col not in df.columns:
-                            df[col] = 'unknown'
+                             # Default severity to 0.5 if missing, others to 'unknown'
+                            df[col] = 0.5 if col == 'severity' else 'unknown'
 
-                    # Prepare display dataframe
-                    display_df = df[required_cols].copy()
-                    display_df['timestamp'] = pd.to_datetime(display_df['timestamp']).dt.strftime('%H:%M:%S')
-                    st.dataframe(
-                        display_df, 
-                        use_container_width=True,
-                        column_config={
-                            "type": "Threat Type",
-                            "src_ip_hash": "Source IP",
-                            "severity": st.column_config.ProgressColumn(
-                                "Severity",
-                                format="%.2f",
-                                min_value=0,
-                                max_value=1,
-                            ),
-                        }
+                    # Processing for Visualization
+                    df['datetime'] = pd.to_datetime(df['timestamp'])
+                    df['severity_score'] = pd.to_numeric(df['severity'], errors='coerce').fillna(0.5)
+                    
+                    # 1. VISUAL TIMELINE CHART
+                    # Scatter plot: Time on X, Threat Type on Y, Color/Size by Severity
+                    fig_timeline = px.scatter(
+                        df, 
+                        x='datetime', 
+                        y='type', 
+                        color='severity_score',
+                        size='severity_score',
+                        size_max=25,
+                        hover_data=['src_ip_hash', 'timestamp'],
+                        color_continuous_scale=['#3b82f6', '#f59e0b', '#ef4444'], # Blue -> Orange -> Red
+                        range_color=[0.4, 1.0],
+                        title=""
                     )
+                    
+                    fig_timeline.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0.2)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        font=dict(color='#e2e8f0'),
+                        xaxis=dict(showgrid=False, title='Time (UTC)', gridcolor='#334155'),
+                        yaxis=dict(showgrid=True, title='', gridcolor='#334155'),
+                        margin=dict(l=0, r=0, t=0, b=0),
+                        height=350,
+                        showlegend=False
+                    )
+                    st.plotly_chart(fig_timeline, use_container_width=True)
+
+                    # 2. RAW DATA (Collapsible)
+                    with st.expander("📝 View Detailed Threat Logs"):
+                        display_df = df[required_cols].copy()
+                        display_df['timestamp'] = df['datetime'].dt.strftime('%H:%M:%S')
+                        st.dataframe(
+                            display_df, 
+                            use_container_width=True,
+                            column_config={
+                                "type": "Threat Type",
+                                "src_ip_hash": "Source IP",
+                                "severity": st.column_config.ProgressColumn(
+                                    "Severity",
+                                    format="%.2f",
+                                    min_value=0,
+                                    max_value=1,
+                                ),
+                            }
+                        )
             else:
                 st.info("No threats detected. System is secure.")
                 

@@ -1,26 +1,51 @@
 # SecureGuard AI - Your Personal Network Security Co-Pilot
 
-##  QUICK START
+##  QUICK START (New Machine Setup)
 
-### 1. Run Local Demo
+### Run local demo
+```bash
+# Clone the repository
+git clone https://github.com/JJEA12/KingHacks---Project.git
+cd KingHacks---Project
+
+# Install Python dependencies
+pip install -r agent/requirements.txt
+pip install streamlit pandas plotly
+```
+
+### Step 2: Run the Security Agent (Backend)
+This simulates network traffic and detects threats using local ML:
 ```bash
 python3 demo.py
 ```
+**What you'll see:** Terminal output showing simulated network packets and detected threats (Port Scans, DDoS attempts).
 
-### 2. Deploy AWS Cloud (Simple Prototype)
-If you have an AWS account (even a workshop one), you can deploy the backend in 1 minute:
-
+###  Launch the Visual Dashboard (Frontend)
+Open a **new terminal** and run:
 ```bash
-# 1. Configure AWS Credentials
-aws configure
-
-# 2. Deploy Cloud Resources
-python3 simple_aws/deploy.py
-
-# 3. Run Demo again (it will auto-detect the cloud)
-python3 demo.py
+streamlit run agent/dashboard.py
 ```
+**What you'll see:** A web browser will open showing:
+-  Real-time threat timeline visualization
+-  Attack distribution charts
+- Live security metrics
+- Color-coded threat severity indicators
 
+The dashboard automatically reads threat data from the agent and updates every 2 seconds.
+
+---
+
+###  What This Demo Shows
+
+This prototype demonstrates the **full SecureGuard AI architecture** without requiring AWS:
+
+1. **Local ML Agent** (`demo.py`) - Simulates the network sensor that would run on a user's machine
+2. **Cloud Database** (`dashboard_data.json`) - Simulates AWS DynamoDB storage
+3. **Visual Interface** (`streamlit dashboard`) - Simulates the cloud-hosted web dashboard
+
+**In production:** The agent would capture real network traffic, the cloud database would be AWS DynamoDB, and the dashboard would be hosted on AWS with Bedrock AI providing natural language explanations.
+
+---
 
 ## Project Mission:
 
@@ -34,7 +59,39 @@ We developed this project in response to growing user concerns about data securi
 
 ##  System Architecture
 
-### Three-Tier Architecture:
+### Current Demo Architecture:
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                    LOCAL MACHINE                           │
+│                                                            │
+│  ┌──────────────────────────────────────────────────┐      │
+│  │         Network Traffic Simulator (demo.py)      │      │
+│  │  - Generates fake network packets                │      │
+│  │  - Simulates normal & malicious traffic          │      │
+│  └──────────────────────────────────────────────────┘      │
+│                         ↓                                  │
+│  ┌──────────────────────────────────────────────────┐      │
+│  │      ML Anomaly Detector (anomaly_detector.py)   │      │
+│  │  - Isolation Forest algorithm                    │      │
+│  │  - Detects: Port Scans, DDoS, Unusual Ports      │      │
+│  └──────────────────────────────────────────────────┘      │
+│                         ↓                                  │
+│  ┌──────────────────────────────────────────────────┐      │
+│  │    "Cloud" Uploader (cloud_uploader.py)          │      │
+│  │  - Writes to dashboard_data.json (Simulates AWS) │      │
+│  └──────────────────────────────────────────────────┘      │
+│                         ↓                                  │
+│  ┌──────────────────────────────────────────────────┐      │
+│  │       Visual Dashboard (dashboard.py)            │      │
+│  │  - Streamlit web interface                       │      │
+│  │  - Timeline visualization                        │      │
+│  │  - Real-time threat updates                      │      │
+│  └──────────────────────────────────────────────────┘      │
+└────────────────────────────────────────────────────────────┘
+```
+
+### Production Architecture (With AWS):
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -46,28 +103,24 @@ We developed this project in response to growing user concerns about data securi
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 │         ↓                                     ↓            │
 │  ┌──────────────────────────────────────────────────┐      │
-│  │        Secure Agent (Python/ Desktop App)        │      │
+│  │        Secure Agent (Python Desktop App)         │      │
 │  └──────────────────────────────────────────────────┘      │
 └────────────────────────────────────────────────────────────┘
-                            ↓ (Encrypted Data)
+                            ↓ (Encrypted HTTPS)
 ┌────────────────────────────────────────────────────────────┐
 │                    AWS CLOUD TIER                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  API Gateway │→ │    Lambda    │→ │  Bedrock AI  │      │
-│  │   (Auth)     │  │  (Processor) │  │  (Analysis)  │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│         ↓                ↓                    ↓            │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  DynamoDB    │  │  SageMaker   │  │  S3 Threat   │      │
-│  │  (User Data) │  │  (ML Model)  │  │  Intelligence│      │
+│  │Lambda Function│→ │  DynamoDB    │  │  Bedrock AI  │      │
+│  │  (Processor) │  │  (Storage)   │  │  (Analysis)  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────┐
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Web Dashboard│  │  CLI Tool    │  │  Mobile App  │      │
-│  │ (React)      │  │  (Optional)  │  │  (Possible)  │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                    USER INTERFACE                          │
+│  ┌──────────────┐  ┌──────────────┐                        │
+│  │ Web Dashboard│  │  Mobile App  │                        │
+│  │ (Streamlit)  │  │  (Future)    │                        │
+│  └──────────────┘  └──────────────┘                        │
 └────────────────────────────────────────────────────────────┘
 ```
 
@@ -85,34 +138,17 @@ We developed this project in response to growing user concerns about data securi
 
 ### Infrastructure Services:
 
-| Service | Purpose | Configuration Details |
+| Service | Purpose | Implementation Status |
 |---------|---------|----------------------|
-| **AWS Lambda** | Serverless Compute | **Functions:**<br>- `ProcessTelemetry`: Process incoming network data<br>- `AnalyzeThreat`: Run ML inference<br>- `GenerateRemediation`: Create fix scripts<br>- `UpdateThreatDB`: Update threat intelligence<br>**Runtime:** Python 3.11<br>**Memory:** 1024-3008 MB<br>**Timeout:** 30-60 seconds |
-| **Amazon API Gateway** | API Management | **Type:** REST API<br>**Auth:** Amazon Cognito<br>**Endpoints:**<br>- `/analyze` (POST)<br>- `/query` (POST)<br>- `/remediate` (POST)<br>- `/threats` (GET) |
-| **Amazon DynamoDB** | NoSQL Database | **Tables:**<br>1. `Users` (user_id, email, settings)<br>2. `ThreatEvents` (event_id, timestamp, severity)<br>3. `NetworkBaselines` (user_id, baseline_data)<br>4. `RemediationHistory` (user_id, actions_taken)<br>**Provisioned:** On-demand |
-| **Amazon S3** | Object Storage | **Buckets:**<br>- `secureguard-threat-signatures`: Threat patterns<br>- `secureguard-ml-models`: ML model artifacts<br>- `secureguard-reports`: Generated reports<br>**Encryption:** SSE-S3 |
-| **Amazon Cognito** | User Authentication | **User Pool:** Email/password auth<br>**MFA:** Optional TOTP<br>**OAuth:** Future integration |
-| **AWS Secrets Manager** | Credentials Management | Store API keys, database credentials |
-| **Amazon CloudWatch** | Monitoring & Logs | **Metrics:**<br>- Lambda invocations<br>- API latency<br>- Threat detection rate<br>**Alarms:** Error rate > 5% |
-| **AWS Systems Manager** | Parameter Store | Configuration management, feature flags |
-| **Amazon EventBridge** | Event Orchestration | Trigger workflows on threat detection |
-| **Amazon SNS** | Notifications | Alert users via email/SMS for critical threats |
-| **Amazon VPC** | Network Security | Isolate Lambda functions, control egress |
-
-### Optional Advanced Services:
-
-| Service | Purpose | When to Use |
-|---------|---------|-------------|
-| **Amazon GuardDuty** | AWS-native Threat Detection | Cross-reference local findings with AWS intelligence |
-| **AWS Security Hub** | Centralized Security View | Aggregate findings across services |
-| **Amazon Macie** | Data Privacy | Detect sensitive data in network traffic logs |
-| **AWS IoT Core** | IoT Device Security | If expanding to IoT device monitoring |
+| **AWS Lambda** | Serverless threat processing |  Code ready in `simple_aws/` |
+| **DynamoDB** | Threat event storage |  Schema defined |
+| **Bedrock AI** | Natural language explanations |  Requires account access |
+| **SageMaker** | Custom ML model training |  Future enhancement |
+| **API Gateway** | Secure agent-to-cloud communication |  Lambda Function URL alternative ready |
 
 ---
 
-## Roadmap
-
-### AWS Backend 
+##  System Architecture 
 
 Use **AWS CDK** (Python or TypeScript)
 
@@ -425,31 +461,59 @@ def sanitize_telemetry(raw_packet):
 
 ---
 
-##  Deliverables Checklist
+---
 
-- [ ] Desktop agent (Windows/Mac/Linux)
-- [ ] AWS infrastructure (CDK code)
-- [ ] ML model (trained + deployed)
-- [ ] Web dashboard (deployed on Amplify)
-- [ ] API documentation (Swagger/OpenAPI)
-- [ ] GitHub repository with README
-- [ ] Demo video (2-3 minutes)
-- [ ] Presentation slides
-- [ ] Architecture diagram (draw.io or Lucidchart)
+##  Project Files
+
+```
+KingHacks---Project/
+├── agent/
+│   ├── main.py              # Main agent entry point
+│   ├── demo.py              # Simulation mode (no admin required)
+│   ├── anomaly_detector.py  # ML-based threat detection
+│   ├── cloud_uploader.py    # Cloud communication (AWS simulation)
+│   ├── network_capture.py   # Real packet capture (requires sudo)
+│   ├── dashboard.py         # Streamlit visual dashboard
+│   ├── config.yaml          # Configuration settings
+│   └── requirements.txt     # Python dependencies
+├── simple_aws/
+│   ├── deploy.py            # AWS deployment automation
+│   └── lambda_function.py   # Lambda backend code
+├── dashboard.html           # Static HTML dashboard (alternative)
+├── dashboard_data.json      # Simulated cloud database
+└── README.md                # This file
+```
 
 ---
 
-##  Quick Start Commands
+##  Troubleshooting
 
-```bash
-# Clone repository
-git clone https://github.com/JJEA12/KingHacks---Project
-cd KingHacks---Project
+**Q: Dashboard shows "No threats detected"**
+- Make sure `demo.py` is running in another terminal
+- Check that `dashboard_data.json` exists in the project root
 
-# Backend deployment
-cd infrastructure
-npm install
-cdk deploy --all
+**Q: Import errors when running demo.py**
+- Run: `pip install -r agent/requirements.txt`
+- Then: `pip install streamlit pandas plotly`
+
+**Q: Permission denied errors**
+- Use `demo.py` instead of `main.py` (demo doesn't need admin privileges)
+
+**Q: Dashboard won't open in browser**
+- Manually visit: `http://localhost:8501`
+- Or check the terminal for the correct port
+
+---
+
+##  License
+
+MIT License - See [LICENSE](LICENSE) for details
+
+---
+
+##  Contributors
+
+Built for KingHacks 2026 by [@JJEA12](https://github.com/JJEA12)
 
 # Frontend deployment
 cd ../dashboard
